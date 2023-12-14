@@ -1,32 +1,23 @@
+// app.module.ts
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { AppRoutingModule } from './app-routing.module'; // Importe o módulo de rotas aqui
 import { AppComponent } from './app.component';
 import { ListaComponent } from './lista/lista.component';
 import { GradeComponent } from './grade/grade.component';
-import { CalendarioComponent } from './calendario/calendario.component';
+import { NavbarComponent } from './navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
-
-const appRoutes: Routes = [
- { path: 'lista', component: ListaComponent },
- { path: 'grade', component: GradeComponent },
- { path: 'calendario', component: CalendarioComponent },
- { path: '', redirectTo: '/lista', pathMatch: 'full' }
-];
 
 @NgModule({
- declarations: [
+  declarations: [
     AppComponent,
     ListaComponent,
     GradeComponent,
-    CalendarioComponent
- ],
- imports: [
-    BrowserModule,
-    FormsModule,
-    RouterModule.forRoot(appRoutes)
- ],
- providers: [],
- bootstrap: [AppComponent]
+    NavbarComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, FormsModule],
+  providers: [],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

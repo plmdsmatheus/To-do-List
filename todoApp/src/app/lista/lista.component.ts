@@ -1,35 +1,73 @@
-// src/app/lista/lista.component.ts
-import { Component, OnInit } from '@angular/core';
-import { ListaService } from '../lista/lista.service';
-import { Tarefa } from '../tarefa';
+import { Component } from '@angular/core';
 
 @Component({
- selector: 'app-lista',
- templateUrl: './lista.component.html',
- styleUrls: ['./lista.component.css']
+  selector: 'app-lista',
+  templateUrl: './lista.component.html',
+  styleUrls: ['./lista.component.css']
 })
-export class ListaComponent implements OnInit {
- tarefas: Tarefa[] = [];
+export class ListaComponent {
+  novaTarefa: string = '';
+  tarefas: any[] = [];
+  tarefaSelecionada: any;
 
- constructor(private listaService: ListaService) { }
+  adicionarTarefa() {
+    const novaTarefaObj = {
+      nome: this.novaTarefa,
+      data: new Date(),
+      status: 'Pendente'
+    };
 
- ngOnInit(): void {
-    this.tarefas = this.listaService.tarefas;
- }
+    this.tarefas.push(novaTarefaObj);
+    this.novaTarefa = '';
+  }
 
- editarTarefa(index: number, tarefa: Tarefa) {
-    this.listaService.editarTarefa(index, tarefa);
- }
+  exibirOpcoes(tarefa: any) {
+    this.tarefaSelecionada = tarefa;
+  }
 
- excluirTarefa(index: number) {
-    this.listaService.excluirTarefa(index);
- }
+  editarTarefa(tarefa: any) {
+    // Lógica para editar a tarefa
+    const novoNome = prompt('Novo nome:', tarefa.nome);
+    const novaData = prompt('Nova data (Formato: YYYY-MM-DD):', this.formatDate(tarefa.data));
 
- suspenderTarefa(index: number) {
-    this.listaService.suspenderTarefa(index);
- }
+    if (novoNome !== null && novoNome !== undefined) {
+      tarefa.nome = novoNome;
+    }
 
- finalizarTarefa(index: number) {
-    this.listaService.finalizarTarefa(index);
- }
+    if (novaData !== null && novaData !== undefined) {
+      const novaDataObj = new Date(novaData);
+      if (!isNaN(novaDataObj.getTime())) {
+        tarefa.data = novaDataObj;
+      } else {
+        alert('Formato de data inválido. A data não foi alterada.');
+      }
+    }
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+
+    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+  }
+
+  suspenderTarefa(tarefa: any) {
+    // Lógica para suspender a tarefa
+    tarefa.status = 'Suspensa';
+  }
+
+  excluirTarefa(tarefa: any) {
+    const index = this.tarefas.indexOf(tarefa);
+    if (index !== -1) {
+      this.tarefas.splice(index, 1);
+      this.tarefaSelecionada = null;
+    }
+  }
+
+  finalizarTarefa(tarefa: any) {
+    // Lógica para finalizar a tarefa
+    tarefa.concluida = true;
+    tarefa.status = 'Finalizada';
+  }
 }
